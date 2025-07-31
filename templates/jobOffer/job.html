@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Offers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <h1>Job Offers</h1>
+    <ul>
+        {% for job in jobs %}
+            <li>
+                <strong>{{ job.title }}</strong> at {{ job.company }} –
+                <a href="{{ url_for('job_detail', job_id=job.id) }}">View</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

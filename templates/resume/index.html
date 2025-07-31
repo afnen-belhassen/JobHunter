@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Matcher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="main-content">
+        <div class="container">
+            <h1>Resume & Job Details</h1>
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                <label>Submit Document</label><br>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">&#8682;</div>
+                    <span id="uploadText">Drag & drop your file here, or click to select</span>
+                    <input type="file" name="resume" id="resumeInput" style="display:none;" accept=".pdf,.doc,.docx,.txt">
+                </div>
+                <div class="file-info" id="fileInfo"></div>
+                <div class="error-message" id="errorMessage"></div>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-bar-inner" id="progressBarInner"></div>
+                </div>
+                <br>
+                <label>Paste Job Description:</label><br>
+                <textarea name="job_description" rows="10" cols="50"></textarea><br><br>
+                <input type="submit" value="Analyze">
+            </form>
+        </div>
+    </div>
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const resumeInput = document.getElementById('resumeInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const errorMessage = document.getElementById('errorMessage');
+        const progressBar = document.getElementById('progressBar');
+        const progressBarInner = document.getElementById('progressBarInner');
+        const uploadForm = document.getElementById('uploadForm');
+        const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword', 'text/plain'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        uploadArea.addEventListener('click', () => resumeInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                resumeInput.files = e.dataTransfer.files;
+                handleFile(resumeInput.files[0]);
+            }
+        });
+        resumeInput.addEventListener('change', () => {
+            if (resumeInput.files.length) {
+                handleFile(resumeInput.files[0]);
+            }
+        });
+        function handleFile(file) {
+            errorMessage.textContent = '';
+            fileInfo.textContent = '';
+            progressBar.style.display = 'none';
+            progressBarInner.style.width = '0%';
+            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|docx?|txt)$/i)) {
+                errorMessage.textContent = 'Invalid file type. Please upload a PDF, DOC, DOCX, or TXT file.';
+                resumeInput.value = '';
+                return;
+            }
+            if (file.size > maxSize) {
+                errorMessage.textContent = 'File is too large. Maximum size is 5MB.';
+                resumeInput.value = '';
+                return;
+            }
+            fileInfo.textContent = `Selected file: ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+        }
+        uploadForm.addEventListener('submit', function(e) {
+            if (!resumeInput.files.length) {
+                errorMessage.textContent = 'Please select a resume file to upload.';
+                e.preventDefault();
+                return;
+            }
+            if (errorMessage.textContent) {
+                e.preventDefault();
+                return;
+            }
+            // Simulate progress bar (since real progress needs AJAX)
+            progressBar.style.display = 'block';
+            progressBarInner.style.width = '0%';
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 20;
+                progressBarInner.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

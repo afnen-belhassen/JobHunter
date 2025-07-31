@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Results</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <h1>Résultat de l’analyse</h1>
+
+    <h2>Texte extrait du CV :</h2>
+    <pre>{{ resume_text }}</pre>
+
+    <h2>Description du poste :</h2>
+    <pre>{{ job_text }}</pre>
+
+    <a href="/">← Retour</a>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!-- templates/navbar.html -->
+<header class="navbar-header">
+  <a href="#" class="logo-link"><div class="logo">MySite</div></a>
+  <nav class="nav-container">
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+    <label for="nav-toggle" class="nav-toggle-label">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+    <form action="#" method="GET" class="nav__search">
+      <div class="search-input-wrapper">
+        <input type="text" name="q" placeholder="Search..." required>
+        <span class="search-icon">🔍</span>
+      </div>
+      <button type="submit" aria-label="Search"></button>
+    </form>
+   <ul class="nav__links">
+  <li><a href="{{ url_for('job_list') }}" class="active">Job Offers</a></li>
+  <li><a href="#">Companies</a></li>
+</ul>
+
+    <a href="#" class="nav-home-link">
+      <img src="/static/images/homme.png" alt="Home" class="nav-home-img">
+    </a>
+  </nav>
+</header>
