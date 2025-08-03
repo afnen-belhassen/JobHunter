@@ -8,6 +8,16 @@ class Job(db.Model):
     title = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text)
     company = db.Column(db.Text, nullable=False)
+    job_type = db.Column(db.String(50))  # full-time, part-time, contract, etc.
+    experience_level = db.Column(db.String(50))  # entry-level, mid-level, senior, etc.
+    location = db.Column(db.String(200))
+    salary_min = db.Column(db.Integer)
+    salary_max = db.Column(db.Integer)
+    requirements = db.Column(db.Text)
+    benefits = db.Column(db.Text)
+    contact_email = db.Column(db.String(200))
+    deadline = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f'<Job {self.title}>'

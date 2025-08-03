@@ -379,3 +379,462 @@ button:hover {
     }
 }
 /* --- End Modern Navbar Styles --- */
+
+/* --- Job Form Styles --- */
+.job-form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 40px 30px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.form-header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.4em;
+    font-weight: 700;
+    color: #0a3a6a;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.form-header p {
+    color: #666;
+    font-size: 1.1em;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05em;
+    font-weight: 600;
+    color: #0a3a6a;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1em;
+    color: #333;
+    background: #fafbfc;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-group textarea.description {
+    min-height: 150px;
+}
+
+.form-group textarea.requirements {
+    min-height: 120px;
+}
+
+.form-group textarea.benefits {
+    min-height: 100px;
+}
+
+.salary-range {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.salary-range input {
+    flex: 1;
+}
+
+.salary-range span {
+    color: #666;
+    font-weight: 500;
+}
+
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #007bff 60%, #0056b3 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #0056b3 60%, #007bff 100%);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.25);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 2px solid #e9ecef;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+    color: #495057;
+    transform: translateY(-1px);
+}
+
+.required {
+    color: #dc3545;
+    margin-left: 4px;
+}
+
+.help-text {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-top: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .job-form-container {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    .form-header h1 {
+        font-size: 2em;
+    }
+    
+    .salary-range {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+/* --- End Job Form Styles --- */
+
+/* --- Navbar Post Job Button --- */
+.nav-post-job-btn {
+    background: linear-gradient(90deg, #007bff 60%, #0056b3 100%) !important;
+    color: #fff !important;
+    padding: 8px 20px !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15) !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-post-job-btn:hover {
+    background: linear-gradient(90deg, #0056b3 60%, #007bff 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(0,123,255,0.25) !important;
+    transform: translateY(-1px) !important;
+}
+
+@media (max-width: 800px) {
+    .nav-post-job-btn {
+        margin-top: 10px !important;
+        text-align: center !important;
+        display: inline-block !important;
+        width: auto !important;
+    }
+}
+/* --- End Navbar Post Job Button --- */
+
+/* --- Job Detail Page Styles --- */
+.job-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px 30px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.job-header {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+.job-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.4em;
+    font-weight: 700;
+    color: #0a3a6a;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.company-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.4em;
+    color: #007bff;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border-radius: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95em;
+    color: #495057;
+}
+
+.meta-icon {
+    font-size: 1.1em;
+    color: #007bff;
+}
+
+.salary-info {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border-left: 4px solid #007bff;
+}
+
+.salary-amount {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #0a3a6a;
+}
+
+.job-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.job-detail-main-content {
+    grid-column: 1;
+}
+
+.job-detail-sidebar {
+    grid-column: 2;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #0a3a6a;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.section-content {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+.section-content p {
+    margin-bottom: 15px;
+}
+
+.requirements-list, .benefits-list {
+    list-style: none;
+    padding: 0;
+}
+
+.requirements-list li, .benefits-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    padding-left: 25px;
+}
+
+.requirements-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.benefits-list li:before {
+    content: "🎁";
+    position: absolute;
+    left: 0;
+}
+
+.contact-info {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.contact-icon {
+    color: #007bff;
+    font-size: 1.2em;
+}
+
+.apply-section {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.apply-title {
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.apply-text {
+    color: #e3f2fd;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+}
+
+.apply-btn {
+    background: #fff;
+    color: #007bff;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.apply-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6c757d;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .job-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .job-detail-container {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    .job-title {
+        font-size: 2em;
+    }
+    
+    .job-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+/* --- End Job Detail Page Styles --- */

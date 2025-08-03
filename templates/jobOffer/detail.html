@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ job.title }} at {{ job.company }} - JobHunter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="main-content">
+        <div class="job-detail-container">
+            <a href="{{ url_for('job.job_list') }}" class="back-btn">
+                ← Back to Jobs
+            </a>
+            
+            <div class="job-header">
+                <h1 class="job-title">{{ job.title }}</h1>
+                <div class="company-name">{{ job.company }}</div>
+                
+                <div class="job-meta">
+                    {% if job.location %}
+                    <div class="meta-item">
+                        <span class="meta-icon">📍</span>
+                        <span>{{ job.location }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if job.job_type %}
+                    <div class="meta-item">
+                        <span class="meta-icon">💼</span>
+                        <span>{{ job.job_type|title }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if job.experience_level %}
+                    <div class="meta-item">
+                        <span class="meta-icon">🎯</span>
+                        <span>{{ job.experience_level|title }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if job.created_at %}
+                    <div class="meta-item">
+                        <span class="meta-icon">📅</span>
+                        <span>Posted {{ job.created_at.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if job.salary_min or job.salary_max %}
+                <div class="salary-info">
+                    <div class="salary-amount">
+                        {% if job.salary_min and job.salary_max %}
+                            ${{ job.salary_min|int }} - ${{ job.salary_max|int }} annually
+                        {% elif job.salary_min %}
+                            From ${{ job.salary_min|int }} annually
+                        {% elif job.salary_max %}
+                            Up to ${{ job.salary_max|int }} annually
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="job-content">
+                <div class="job-detail-main-content">
+                    {% if job.description %}
+                    <div class="section">
+                        <h2 class="section-title">Job Description</h2>
+                        <div class="section-content">
+                            {{ job.description|nl2br }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if job.requirements %}
+                    <div class="section">
+                        <h2 class="section-title">Requirements & Qualifications</h2>
+                        <div class="section-content">
+                            <ul class="requirements-list">
+                                {% for requirement in job.requirements.split('\n') %}
+                                    {% if requirement.strip() %}
+                                    <li>{{ requirement.strip() }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if job.benefits %}
+                    <div class="section">
+                        <h2 class="section-title">Benefits & Perks</h2>
+                        <div class="section-content">
+                            <ul class="benefits-list">
+                                {% for benefit in job.benefits.split('\n') %}
+                                    {% if benefit.strip() %}
+                                    <li>{{ benefit.strip() }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="job-detail-sidebar">
+                    <div class="contact-info">
+                        <h3 class="section-title">Contact Information</h3>
+                        
+                        {% if job.contact_email %}
+                        <div class="contact-item">
+                            <span class="contact-icon">📧</span>
+                            <span>{{ job.contact_email }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if job.deadline %}
+                        <div class="contact-item">
+                            <span class="contact-icon">⏰</span>
+                            <span>Deadline: {{ job.deadline.strftime('%B %d, %Y') }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="contact-item">
+                            <span class="contact-icon">🏢</span>
+                            <span>{{ job.company }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="apply-section">
+                <h3 class="apply-title">Ready to Apply?</h3>
+                <p class="apply-text">
+                    {% if job.contact_email %}
+                        Send your resume and cover letter to {{ job.contact_email }}
+                    {% else %}
+                        Contact the company directly to apply for this position
+                    {% endif %}
+                </p>
+                {% if job.contact_email %}
+                <a href="mailto:{{ job.contact_email }}?subject=Application for {{ job.title }} position" class="apply-btn">
+                    Apply Now
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
