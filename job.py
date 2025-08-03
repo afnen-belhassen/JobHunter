@@ -1,52 +1,35 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
-import os #works with file paths and fodler creation
-import fitz  # PyMuPDF-extracts text from pdfs
-import docx #reads .docx files
-from datetime import datetime
+from flask import Blueprint, render_template, request, redirect, url_for
+from extensions import db
+from models import Job
 
-app = Flask(__name__)
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jobs.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-class Job(db.Model):  # Changed from Jobs to Job
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Text, nullable=False)
-    description = db.Column(db.Text)
-    company = db.Column(db.Text, nullable=False)
-
-    def __repr__(self):
-        return f'<Job {self.title}>'
+job_bp = Blueprint('job', __name__, template_folder='templates/jobOffer')
 
 
+# Note: Do NOT create Flask app here or call app.run()
 
-@app.route('/', methods=['GET', 'POST'])
+# You will need to initialize db in app.py and import it here or pass it in (common pattern)
+
+@job_bp.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         title = request.form['title']
         company = request.form['company']
         description = request.form['description']
 
-        # Save to DB
         job = Job(title=title, company=company, description=description)
         db.session.add(job)
         db.session.commit()
 
-        return redirect(url_for('job_detail', job_id=job.id))
+        return redirect(url_for('job.job_detail', job_id=job.id))
 
-    return render_template('job/index.html')
-@app.route('/jobs')
+    return render_template('resume/index.html')
+
+@job_bp.route('/')
 def job_list():
     jobs = Job.query.all()
-    return render_template('jobOffer/job.html', jobs=jobs)
-
-@app.route('/job/<int:job_id>')
+    return render_template('job.html', jobs=jobs)
+    
+@job_bp.route('/job/<int:job_id>')
 def job_detail(job_id):
     job = Job.query.get_or_404(job_id)
-    return render_template('job/detail.html', job=job)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return render_template('jobOffer/detail.html', job=job)
