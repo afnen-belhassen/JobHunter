@@ -2,18 +2,96 @@
 <html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Results</title>
+    <title>Résultats de la correspondance</title>
 </head>
 <body>
     {% include 'navbar.html' %}
-    <h1>Résultat de l’analyse</h1>
-
-    <h2>Texte extrait du CV :</h2>
-    <pre>{{ resume_text }}</pre>
-
-    <h2>Description du poste :</h2>
-    <pre>{{ job_text }}</pre>
-
-    <a href="/">← Retour</a>
+    <div class="main-content">
+        <div class="jobs-container">
+            <div class="jobs-header">
+                <h1 class="jobs-title">Résultats de la correspondance</h1>
+                <p class="jobs-subtitle">Découvrez à quels postes votre CV correspond le mieux</p>
+            </div>
+            {% if job_matches %}
+                <div class="jobs-grid">
+                    {% for match in job_matches %}
+                        <div class="job-card">
+                            <h2 class="job-title">{{ match.job.title }}</h2>
+                            <div class="company-name">{{ match.job.company }}</div>
+                            <div class="job-meta">
+                                {% if match.job.location %}
+                                    <span class="meta-tag">📍 {{ match.job.location }}</span>
+                                {% endif %}
+                                {% if match.job.job_type %}
+                                    <span class="meta-tag">💼 {{ match.job.job_type|title }}</span>
+                                {% endif %}
+                                {% if match.job.experience_level %}
+                                    <span class="meta-tag">🎯 {{ match.job.experience_level|title }}</span>
+                                {% endif %}
+                            </div>
+                            {% if match.job.description %}
+                                <p class="job-description">
+                                    {{ match.job.description[:150] }}{% if match.job.description|length > 150 %}...{% endif %}
+                                </p>
+                            {% endif %}
+                            <button class="compare-toggle" onclick="toggleDetails('details-{{ loop.index }}')">Afficher la comparaison</button>
+                            <div class="comparison-details" id="details-{{ loop.index }}">
+                                <strong>Compétences requises :</strong>
+                                <ul>
+                                    {% for req in match.required_skills %}
+                                        <li>{{ req }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <strong>Compétences correspondantes :</strong>
+                                {% if match.matched_skills %}
+                                    <ul>
+                                        {% for skill in match.matched_skills %}
+                                            <li style="color:green;">{{ skill }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p><em>Aucune compétence du CV ne correspond à cette offre.</em></p>
+                                {% endif %}
+                                <strong>Compétences manquantes :</strong>
+                                {% if match.missing_skills %}
+                                    <ul>
+                                        {% for skill in match.missing_skills %}
+                                            <li style="color:red;">{{ skill }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p><em>Vous possédez toutes les compétences requises pour cette offre !</em></p>
+                                {% endif %}
+                            </div>
+                            <div class="job-footer">
+                                <span class="job-date">
+                                    {% if match.job.created_at %}
+                                        Posté le {{ match.job.created_at.strftime('%d %b %Y') }}
+                                    {% endif %}
+                                </span>
+                                <a href="{{ url_for('job.job_detail', job_id=match.job.id) }}" class="view-btn">
+                                    Voir l'offre
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-jobs">
+                    <h3>Aucune offre d'emploi trouvée dans la base de données.</h3>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function toggleDetails(id) {
+            var el = document.getElementById(id);
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

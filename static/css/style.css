@@ -838,3 +838,64 @@ button:hover {
     }
 }
 /* --- End Job Detail Page Styles --- */
+
+/* --- Job Comparison (Result Page) Styles --- */
+.compare-toggle {
+    background: #f0f4fa;
+    color: #007bff;
+    border: none;
+    border-radius: 15px;
+    padding: 6px 18px;
+    font-size: 0.95em;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+.compare-toggle:hover {
+    background: #e2e6ea;
+}
+.comparison-details {
+    display: none;
+    margin-top: 10px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px 20px;
+}
+.job-match-block {
+    margin-bottom: 0;
+}
+/* --- End Job Comparison (Result Page) Styles --- */
+
+/* --- Job Card and Grid Styles (Shared) --- */
+.jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+.job-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+}
+.job-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    border-color: #007bff;
+}
+@media (max-width: 768px) {
+    .jobs-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+/* --- End Job Card and Grid Styles (Shared) --- */

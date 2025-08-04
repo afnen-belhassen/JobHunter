@@ -4,7 +4,7 @@ import fitz
 import docx
 from extensions import db
 from job import job_bp
-from models import ResumeAnalysis
+from models import ResumeAnalysis, Job
 from datetime import datetime
 
 UPLOAD_FOLDER = 'uploads'
@@ -29,7 +29,6 @@ def create_app():
     def index():
         if request.method == 'POST':
             resume_file = request.files['resume']
-            job_text = request.form['job_description']
 
             if resume_file:
                 filename = resume_file.filename
@@ -37,15 +36,17 @@ def create_app():
                 resume_file.save(path)
 
                 resume_text = extract_text(path)
+                # Extract skills from the resume text
+                extracted_skills = extract_skills_section(resume_text)
 
                 analysis = ResumeAnalysis(
                     filename=filename,
                     extracted_text=resume_text,
-                    job_description=job_text
                 )
                 db.session.add(analysis)
                 db.session.commit()
 
+                # Pass skills via query string (or store in session/db for more complex use)
                 return redirect(url_for('result', id=analysis.id))
 
         return render_template('resume/index.html')
@@ -53,9 +54,43 @@ def create_app():
     @app.route('/result/<int:id>')
     def result(id):
         analysis = ResumeAnalysis.query.get_or_404(id)
+        # Extract skills for display/comparison
+        extracted_skills = extract_skills_section(analysis.extracted_text)
+
+        # Fetch all jobs from the database
+        jobs = Job.query.all()
+        job_matches = []
+        for job in jobs:
+            # Parse job requirements into a list of skills (split by line, comma, or semicolon)
+            if job.requirements:
+                import re
+                req_lines = [l.strip() for l in job.requirements.splitlines() if l.strip()]
+                req_skills = []
+                for line in req_lines:
+                    if ',' in line or ';' in line:
+                        req_skills.extend([s.strip() for s in re.split(r",|;", line) if s.strip()])
+                    else:
+                        req_skills.append(line)
+                # Normalize for comparison (case-insensitive)
+                user_skills_set = set([s.lower() for s in extracted_skills])
+                req_skills_set = set([s.lower() for s in req_skills])
+                matched = sorted([s for s in req_skills if s.lower() in user_skills_set])
+                missing = sorted([s for s in req_skills if s.lower() not in user_skills_set])
+            else:
+                req_skills = []
+                matched = []
+                missing = []
+            job_matches.append({
+                'job': job,
+                'required_skills': req_skills,
+                'matched_skills': matched,
+                'missing_skills': missing
+            })
+
         return render_template('resume/result.html',
                                resume_text=analysis.extracted_text,
-                               job_text=analysis.job_description)
+                               extracted_skills=extracted_skills,
+                               job_matches=job_matches)
 
     return app
 
@@ -81,6 +116,42 @@ def extract_text(path):
             return f.read()
     else:
         return "Format non supporté."
+
+# --- Skills extraction helper ---
+def extract_skills_section(text):
+    import re
+    # Possible section headers in English and French
+    headers = [
+        r"skills", r"technical skills", r"compétences techniques", r"compétences", r"skills & abilities"
+    ]
+    # Build regex for section header (case-insensitive, start of line)
+    header_regex = re.compile(r"^.*(?:" + "|".join(headers) + r").*$", re.IGNORECASE | re.MULTILINE)
+    matches = list(header_regex.finditer(text))
+    if not matches:
+        return []
+    # Take the first match as the start of the section
+    start = matches[0].end()
+    # Find the next section header (all-caps or line with colon, or 2+ blank lines)
+    next_header = re.search(r"\n\s*([A-Z][A-Z\s\-&]+:?)\n|\n{2,}", text[start:])
+    end = start + next_header.start() if next_header else len(text)
+    section = text[start:end].strip()
+    # Split section into lines, remove empty, split by comma or semicolon if needed
+    lines = [l.strip() for l in section.splitlines() if l.strip()]
+    skills = []
+    for line in lines:
+        # Split by comma or semicolon if present
+        if ',' in line or ';' in line:
+            skills.extend([s.strip() for s in re.split(r",|;", line) if s.strip()])
+        else:
+            skills.append(line)
+    # Remove duplicates, keep order
+    seen = set()
+    unique_skills = []
+    for skill in skills:
+        if skill.lower() not in seen:
+            unique_skills.append(skill)
+            seen.add(skill.lower())
+    return unique_skills
 
 if __name__ == "__main__":
     app = create_app()
