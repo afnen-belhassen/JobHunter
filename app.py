@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import os
 import fitz
 import docx
-from extensions import db
+from extensions import db, login_manager
 from job import job_bp
-from models import ResumeAnalysis, Job
+from models import ResumeAnalysis, Job, User
 from datetime import datetime
 
 UPLOAD_FOLDER = 'uploads'
@@ -14,15 +15,103 @@ def create_app():
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 
     db.init_app(app)
+    login_manager.init_app(app)
     app.register_blueprint(job_bp, url_prefix='/jobs')
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        flash('Please log in to access this page.', 'warning')
+        return redirect(url_for('login'))
 
     # Create upload folder if missing
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
     with app.app_context():
         db.create_all()
+
+    # Authentication routes
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+        
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            remember = True if request.form.get('remember') else False
+            
+            user = User.query.filter_by(username=username).first()
+            
+            if user and user.check_password(password):
+                login_user(user, remember=remember)
+                flash('Logged in successfully!', 'success')
+                next_page = request.args.get('next')
+                return redirect(next_page) if next_page else redirect(url_for('index'))
+            else:
+                flash('Invalid username or password. Please try again.', 'error')
+        
+        return render_template('user/login.html')
+
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+        
+        if request.method == 'POST':
+            username = request.form.get('username')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            
+            # Validation
+            if not username or not email or not password:
+                flash('All fields are required.', 'error')
+                return render_template('user/register.html')
+            
+            if password != confirm_password:
+                flash('Passwords do not match.', 'error')
+                return render_template('user/register.html')
+            
+            if User.query.filter_by(username=username).first():
+                flash('Username already exists. Please choose a different one.', 'error')
+                return render_template('user/register.html')
+            
+            if User.query.filter_by(email=email).first():
+                flash('Email already registered. Please use a different email.', 'error')
+                return render_template('user/register.html')
+            
+            # Create new user
+            user = User(
+                username=username,
+                email=email,
+                first_name=first_name,
+                last_name=last_name
+            )
+            user.set_password(password)
+            
+            db.session.add(user)
+            db.session.commit()
+            
+            flash('Registration successful! Please log in.', 'success')
+            return redirect(url_for('login'))
+        
+        return render_template('user/register.html')
+
+    @app.route('/logout')
+    @login_required
+    def logout():
+        logout_user()
+        flash('You have been logged out successfully.', 'success')
+        return redirect(url_for('index'))
 
     # Resume processing routes
     @app.route('/', methods=['GET', 'POST'])
