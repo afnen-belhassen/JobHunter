@@ -19,7 +19,7 @@
   <li><a href="{{ url_for('job.job_list') }}" class="active">Job Offers</a>
 </li>
   <li><a href="#">Companies</a></li>
-  {% if current_user.is_authenticated %}
+  {% if current_user.is_authenticated and current_user.user_type == 'job_offerer' %}
     <li><a href="{{ url_for('job.add_job') }}" class="nav-post-job-btn">Post Job</a></li>
   {% endif %}
 </ul>
@@ -31,6 +31,16 @@
           <img src="/static/images/homme.png" alt="Profile" class="nav-home-img">
         </div>
         <div class="user-dropdown">
+          <div class="user-dropdown-header">
+            <span class="dropdown-user-name">{{ current_user.first_name or current_user.username }}</span>
+            <span class="dropdown-user-type">
+              {% if current_user.user_type == 'job_seeker' %}
+                👤 Job Seeker
+              {% else %}
+                🏢 Job Offerer
+              {% endif %}
+            </span>
+          </div>
           <a href="#" class="dropdown-item">Profile</a>
           <a href="#" class="dropdown-item">Settings</a>
           <a href="{{ url_for('logout') }}" class="dropdown-item">Logout</a>

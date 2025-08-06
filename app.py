@@ -71,6 +71,7 @@ def create_app():
             confirm_password = request.form.get('confirm_password')
             first_name = request.form.get('first_name')
             last_name = request.form.get('last_name')
+            user_type = request.form.get('user_type')
             
             # Validation
             if not username or not email or not password:
@@ -79,6 +80,10 @@ def create_app():
             
             if password != confirm_password:
                 flash('Passwords do not match.', 'error')
+                return render_template('user/register.html')
+            
+            if not user_type or user_type not in ['job_seeker', 'job_offerer']:
+                flash('Please select a valid user type.', 'error')
                 return render_template('user/register.html')
             
             if User.query.filter_by(username=username).first():
@@ -94,7 +99,8 @@ def create_app():
                 username=username,
                 email=email,
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
+                user_type=user_type
             )
             user.set_password(password)
             

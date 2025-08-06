@@ -458,6 +458,29 @@ button:hover {
     color: #007bff;
 }
 
+.user-dropdown-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 4px;
+}
+
+.dropdown-user-name {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #0a3a6a;
+    font-size: 0.95em;
+    margin-bottom: 4px;
+}
+
+.dropdown-user-type {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85em;
+    color: #666;
+    font-weight: 500;
+}
+
 /* Authentication Container Styles */
 .auth-container {
     display: flex;
@@ -571,6 +594,95 @@ button:hover {
     border-color: #007bff;
     background: #fff;
     box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* User Type Selection Styles */
+.user-type-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.user-type-option {
+    cursor: pointer;
+    display: block;
+}
+
+.user-type-option input[type="radio"] {
+    display: none;
+}
+
+.user-type-card {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.user-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.user-type-card:hover {
+    border-color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.15);
+}
+
+.user-type-option input[type="radio"]:checked + .user-type-card {
+    border-color: #007bff;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.2);
+}
+
+.user-type-option input[type="radio"]:checked + .user-type-card::before {
+    opacity: 0.1;
+}
+
+.user-type-icon {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.user-type-content {
+    position: relative;
+    z-index: 2;
+}
+
+.user-type-content h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #0a3a6a;
+    margin-bottom: 5px;
+}
+
+.user-type-content p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9em;
+    color: #666;
+    margin: 0;
+}
+
+.user-type-option input[type="radio"]:checked + .user-type-card .user-type-content h3 {
+    color: #007bff;
 }
 
 /* Checkbox Styles */
@@ -727,6 +839,28 @@ button:hover {
     
     .user-name {
         display: none;
+    }
+    
+    /* Mobile User Type Styles */
+    .user-type-options {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .user-type-card {
+        padding: 16px;
+    }
+    
+    .user-type-icon {
+        font-size: 2em;
+    }
+    
+    .user-type-content h3 {
+        font-size: 1em;
+    }
+    
+    .user-type-content p {
+        font-size: 0.85em;
     }
 }
 /* --- End Modern Navbar Styles --- */

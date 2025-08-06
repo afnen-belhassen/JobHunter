@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
 from extensions import db
 from models import Job
 from datetime import datetime
@@ -17,10 +18,15 @@ job_bp.add_app_template_filter(nl2br, 'nl2br')
 
 # Note: Do NOT create Flask app here or call app.run()
 
-# You will need to initialize db in app.py and import it here or pass it in (common pattern)
+# You will need to initialize db in app.py and pass it in (common pattern)
 
 @job_bp.route('/submit', methods=['GET', 'POST'])
+@login_required
 def index():
+    if current_user.user_type != 'job_offerer':
+        flash('Only job offerers can post jobs.', 'error')
+        return redirect(url_for('job.job_list'))
+        
     if request.method == 'POST':
         title = request.form['title']
         company = request.form['company']
@@ -45,7 +51,13 @@ def job_detail(job_id):
     return render_template('jobOffer/detail.html', job=job)
 
 @job_bp.route('/add', methods=['GET', 'POST'])
+@login_required
 def add_job():
+    # Check if user is a job offerer
+    if current_user.user_type != 'job_offerer':
+        flash('Only job offerers can post jobs. Please contact support if you need to change your account type.', 'error')
+        return redirect(url_for('job.job_list'))
+    
     if request.method == 'POST':
         # Handle form submission
         job_title = request.form.get('job_title')
@@ -80,6 +92,7 @@ def add_job():
         db.session.add(job)
         db.session.commit()
         
+        flash('Job posted successfully!', 'success')
         return redirect(url_for('job.job_detail', job_id=job.id))
     
     # GET request - show the form
